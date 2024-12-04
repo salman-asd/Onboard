@@ -3,11 +3,13 @@ using ASD.Onboard.Infrastructure.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers();
 builder.Services.AddKeyVaultIfConfigured(builder.Configuration);
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();
+
 
 var app = builder.Build();
 
@@ -32,11 +34,20 @@ app.UseSwaggerUi3(settings =>
     settings.DocumentPath = "/api/specification.json";
 });
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+// Configure routing
+app.UseRouting();
+app.UseAuthorization();
 
-app.MapRazorPages();
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller}/{action}");
+
+// Optionally add an API-specific route
+app.MapControllerRoute(
+    name: "api",
+    pattern: "api/{controller}/{action}");
+
+//app.MapRazorPages();
 
 app.MapFallbackToFile("index.html");
 
