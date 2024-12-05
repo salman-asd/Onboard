@@ -1,6 +1,19 @@
 using ASD.Onboard.Infrastructure.Data;
 
+const string Allow_Origin_Policy = "Allow-Origin-Policy";
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(Allow_Origin_Policy, builder =>
+    {
+        builder.WithOrigins("http://localhost:4200", "https://localhost:4200")
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials();
+    });
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -34,6 +47,7 @@ app.UseSwaggerUi3(settings =>
     settings.DocumentPath = "/api/specification.json";
 });
 
+app.UseCors(Allow_Origin_Policy);
 // Configure routing
 app.UseRouting();
 app.UseAuthorization();
