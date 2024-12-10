@@ -437,6 +437,189 @@
           }
         }
       }
+    },
+    "/api/Applicant/Get/{id}": {
+      "get": {
+        "tags": [
+          "Applicant"
+        ],
+        "operationId": "Applicant_Get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApplicantEducationModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Applicant/Create": {
+      "post": {
+        "tags": [
+          "Applicant"
+        ],
+        "operationId": "Applicant_Create",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateApplicantCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApplicantEducationModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Applicant/Update": {
+      "post": {
+        "tags": [
+          "Applicant"
+        ],
+        "operationId": "Applicant_Update",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateApplicantCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApplicantEducationModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Applicant/GetMyAttendance/{applicantId}": {
+      "get": {
+        "tags": [
+          "Applicant"
+        ],
+        "operationId": "Applicant_GetMyAttendance",
+        "parameters": [
+          {
+            "name": "appliacantId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "applicantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApplicantEducationModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Applicant/UpsertEducations": {
+      "post": {
+        "tags": [
+          "Applicant"
+        ],
+        "operationId": "Applicant_UpsertEducations",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertApplicantEducationCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApplicantEducationModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -685,6 +868,239 @@
           "summary": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "ApplicantEducationModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "educationLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "instituteName": {
+            "type": "string"
+          },
+          "countryOfInstitute": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "majorSubject": {
+            "type": "string"
+          },
+          "passingYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "string"
+          },
+          "applicantId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "CreateApplicantCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "preferredName": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date"
+          },
+          "bloodGroupId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "religionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "maritalStatusId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "genderId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "primaryMobileNo": {
+            "type": "string"
+          },
+          "secondaryMobileNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryEmail": {
+            "type": "string"
+          },
+          "secondaryEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "nationalityId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "identificationType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "identificationNo": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "permAddress": {
+            "type": "string"
+          },
+          "permDistrictId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "permZipCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "presAddress": {
+            "type": "string"
+          },
+          "presDistrictId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "presZipCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "contactAddress": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpdateApplicantCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "preferredName": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date"
+          },
+          "bloodGroupId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "religionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "maritalStatusId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "genderId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "primaryMobileNo": {
+            "type": "string"
+          },
+          "secondaryMobileNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryEmail": {
+            "type": "string"
+          },
+          "secondaryEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "nationalityId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "identificationType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "identificationNo": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "permAddress": {
+            "type": "string"
+          },
+          "permDistrictId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "permZipCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "presAddress": {
+            "type": "string"
+          },
+          "presDistrictId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "presZipCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "contactAddress": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpsertApplicantEducationCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "applicantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "applicantEducations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicantEducationModel"
+            }
           }
         }
       }
