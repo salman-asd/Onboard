@@ -19,7 +19,7 @@ public class ApplicantController : BaseController
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<ApplicantEducationModel>>> Create(CreateApplicantCommand command)
+    public async Task<ActionResult<List<ApplicantEducationModel>>> Create([FromBody] CreateApplicantCommand command)
     {
         await Mediator.Send(command);
         return Ok();

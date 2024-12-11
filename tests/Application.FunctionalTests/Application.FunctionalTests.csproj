@@ -36,5 +36,10 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\Web\Web.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="TodoItems\Commands\" />
+      <Folder Include="TodoLists\" />
+    </ItemGroup>
 
 </Project>

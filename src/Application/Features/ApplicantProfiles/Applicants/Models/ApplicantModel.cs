@@ -15,7 +15,7 @@ public record ApplicantModel
     public string? SecondaryMobileNo { get; set; }
     public string PrimaryEmail { get; set; }
     public string? SecondaryEmail { get; set; }
-    public int NationalityId { get; set; }
+    public string Nationality { get; set; }
     public int IdentificationType { get; set; }
     public long IdentificationNo { get; set; }
     public string PermAddress { get; set; }

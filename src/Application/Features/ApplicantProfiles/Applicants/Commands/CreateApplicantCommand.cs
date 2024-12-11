@@ -13,7 +13,7 @@ public record CreateApplicantCommand(
     string? SecondaryMobileNo,
     string PrimaryEmail,
     string? SecondaryEmail,
-    int NationalityId,
+    string Nationality,
     int IdentificationType,
     long IdentificationNo,
     string PermAddress,
@@ -45,6 +45,7 @@ internal sealed class CreateApplicantCommandHandler(
         var entity = mapper.Map<Applicant>(request);
 
         context.Applicants.Add(entity);
+        entity.Nationality = "BD";
 
         await context.SaveChangesAsync(cancellationToken);
 

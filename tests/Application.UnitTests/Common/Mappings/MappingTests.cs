@@ -1,11 +1,9 @@
 ﻿using System.Reflection;
 using System.Runtime.Serialization;
-using AutoMapper;
 using ASD.Onboard.Application.Common.Interfaces;
 using ASD.Onboard.Application.Common.Models;
-using ASD.Onboard.Application.TodoItems.Queries.GetTodoItemsWithPagination;
-using ASD.Onboard.Application.TodoLists.Queries.GetTodos;
 using ASD.Onboard.Domain.Entities;
+using AutoMapper;
 using NUnit.Framework;
 
 namespace ASD.Onboard.Application.UnitTests.Common.Mappings;
@@ -30,11 +28,8 @@ public class MappingTests
     }
 
     [Test]
-    [TestCase(typeof(TodoList), typeof(TodoListDto))]
-    [TestCase(typeof(TodoItem), typeof(TodoItemDto))]
     [TestCase(typeof(TodoList), typeof(LookupDto))]
     [TestCase(typeof(TodoItem), typeof(LookupDto))]
-    [TestCase(typeof(TodoItem), typeof(TodoItemBriefDto))]
     public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
     {
         var instance = GetInstanceOf(source);

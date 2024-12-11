@@ -953,9 +953,8 @@
             "type": "string",
             "nullable": true
           },
-          "nationalityId": {
-            "type": "integer",
-            "format": "int32"
+          "nationality": {
+            "type": "string"
           },
           "identificationType": {
             "type": "integer",

@@ -4,7 +4,7 @@ public class ApplicantEducation: BaseAuditableEntity
 {
     public int EducationLevel { get; set; }
     public string InstituteName { get; set; }
-    public int CountryOfInstitute { get; set; }
+    public string CountryOfInstitute { get; set; }
     public string MajorSubject { get; set; }
     public int PassingYear { get; set; }
     public string Result { get; set; }

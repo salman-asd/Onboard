@@ -4,9 +4,9 @@ namespace ASD.Onboard.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
-    DbSet<TodoList> TodoLists { get; }
+    //DbSet<TodoList> TodoLists { get; }
 
-    DbSet<TodoItem> TodoItems { get; }
+    //DbSet<TodoItem> TodoItems { get; }
 
     #region  Applicant Profile
     DbSet<Applicant> Applicants { get; }
