@@ -8,12 +8,12 @@ public class UpdateApplicantCommandValidator : AbstractValidator<UpdateApplicant
     {
         _context = context;
 
-        RuleFor(v => v.FirstName)
-            .NotEmpty()
-            .MaximumLength(200)
-            .MustAsync(BeUniqueTitle)
-                .WithMessage("'{PropertyName}' must be unique.")
-                .WithErrorCode("Unique");
+        //RuleFor(v => v.FirstName)
+        //    .NotEmpty()
+        //    .MaximumLength(200)
+        //    .MustAsync(BeUniqueTitle)
+        //        .WithMessage("'{PropertyName}' must be unique.")
+        //        .WithErrorCode("Unique");
     }
 
     public async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)

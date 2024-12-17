@@ -2,6 +2,7 @@
 using ASD.Onboard.Application.Features.ApplicantProfiles.ApplicantEducations.Models;
 using ASD.Onboard.Application.Features.ApplicantProfiles.ApplicantEducations.Queries;
 using ASD.Onboard.Application.Features.ApplicantProfiles.Applicants.Commands;
+using ASD.Onboard.Application.Features.ApplicantProfiles.Applicants.Models;
 using ASD.Onboard.Application.Features.ApplicantProfiles.Applicants.Queries;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +12,7 @@ public class ApplicantController : BaseController
 {
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<ApplicantEducationModel>>> Get(Guid id)
+    public async Task<ActionResult<ApplicantModel>> Get(Guid id)
     {
         var result = await Mediator.Send(new GetApplicantQuery(id));
         return Ok(result);
@@ -19,7 +20,7 @@ public class ApplicantController : BaseController
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<ApplicantEducationModel>>> Create([FromBody] CreateApplicantCommand command)
+    public async Task<ActionResult> Create([FromBody] CreateApplicantCommand command)
     {
         await Mediator.Send(command);
         return Ok();
@@ -27,7 +28,7 @@ public class ApplicantController : BaseController
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<ApplicantEducationModel>>> Update(UpdateApplicantCommand command)
+    public async Task<ActionResult> Update(UpdateApplicantCommand command)
     {
         await Mediator.Send(command);
         return Ok();
@@ -36,7 +37,7 @@ public class ApplicantController : BaseController
     #region Educations
     [HttpGet("{applicantId:Guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<ApplicantEducationModel>>> GetMyAttendance(Guid appliacantId)
+    public async Task<ActionResult<List<ApplicantEducationModel>>> GetEducations(Guid appliacantId)
     {
         var result = await Mediator.Send(new GetApplicantEducationQuery(appliacantId));
         return Ok(result);
@@ -44,7 +45,7 @@ public class ApplicantController : BaseController
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<ApplicantEducationModel>>> UpsertEducations(UpsertApplicantEducationCommand command)
+    public async Task<ActionResult> UpsertEducations(UpsertApplicantEducationCommand command)
     {
         await Mediator.Send(command);
         return Ok();

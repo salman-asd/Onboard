@@ -1,13 +1,18 @@
 ﻿namespace ASD.Onboard.Application.Features.ApplicantProfiles.ApplicantEducations.Commands;
 
 public record CreateApplicantEducationCommand(
-    int EducationLevel,
-    string InstituteName,
-    int CountryOfInstitute,
-    string MajorSubject,
-    int PassingYear,
-    string Result,
-    Guid ApplicantId
+    Guid? EducationLevel,
+    string? InstituteName,
+    string? CountryOfInstitute,
+    string? MajorSubject,
+    int? PassingYear,
+    int? ResultType,
+    string? Result,
+    decimal? ResultScale,
+    Guid ApplicantId,
+    string? Board,
+    bool IsHeighestEducation,
+    Applicant Applicant
     ) : IRequest<Guid>
 {
     private class Mapping : Profile
@@ -36,3 +41,4 @@ internal sealed class CreateApplicantEducationCommandHandler(
         return entity.Id;
     }
 }
+

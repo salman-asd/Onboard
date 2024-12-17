@@ -462,10 +462,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApplicantEducationModel"
-                  }
+                  "$ref": "#/components/schemas/ApplicantModel"
                 }
               }
             }
@@ -493,17 +490,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApplicantEducationModel"
-                  }
-                }
-              }
-            }
+            "description": ""
           }
         }
       }
@@ -528,27 +515,17 @@
         },
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApplicantEducationModel"
-                  }
-                }
-              }
-            }
+            "description": ""
           }
         }
       }
     },
-    "/api/Applicant/GetMyAttendance/{applicantId}": {
+    "/api/Applicant/GetEducations/{applicantId}": {
       "get": {
         "tags": [
           "Applicant"
         ],
-        "operationId": "Applicant_GetMyAttendance",
+        "operationId": "Applicant_GetEducations",
         "parameters": [
           {
             "name": "appliacantId",
@@ -606,17 +583,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApplicantEducationModel"
-                  }
-                }
-              }
-            }
+            "description": ""
           }
         }
       }
@@ -871,7 +838,7 @@
           }
         }
       },
-      "ApplicantEducationModel": {
+      "ApplicantModel": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -879,30 +846,104 @@
             "type": "string",
             "format": "guid"
           },
-          "educationLevel": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "instituteName": {
-            "type": "string"
-          },
-          "countryOfInstitute": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "majorSubject": {
-            "type": "string"
-          },
-          "passingYear": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "result": {
-            "type": "string"
-          },
-          "applicantId": {
+          "firstName": {
             "type": "string",
-            "format": "guid"
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "preferredName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dob": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "bloodGroupId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "religionId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "maritalStatusId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "genderId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "primaryMobileNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "secondaryMobileNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "secondaryEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "nationality": {
+            "type": "string",
+            "nullable": true
+          },
+          "identificationType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "identificationNo": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "permAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "permDistrictId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "permZipCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "presAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "presDistrictId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "presZipCode": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "contactAddress": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -911,72 +952,89 @@
         "additionalProperties": false,
         "properties": {
           "firstName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "lastName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "preferredName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "dob": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "nullable": true
           },
           "bloodGroupId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "religionId": {
             "type": "string",
-            "format": "guid"
+            "format": "guid",
+            "nullable": true
           },
           "maritalStatusId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "genderId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "primaryMobileNo": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "secondaryMobileNo": {
             "type": "string",
             "nullable": true
           },
           "primaryEmail": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "secondaryEmail": {
             "type": "string",
             "nullable": true
           },
           "nationality": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "identificationType": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "identificationNo": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "permAddress": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "permDistrictId": {
             "type": "string",
-            "format": "guid"
+            "format": "guid",
+            "nullable": true
           },
           "permZipCode": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "presAddress": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "presDistrictId": {
             "type": "string",
@@ -1003,73 +1061,89 @@
             "format": "guid"
           },
           "firstName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "lastName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "preferredName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "dob": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "nullable": true
           },
           "bloodGroupId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "religionId": {
             "type": "string",
-            "format": "guid"
+            "format": "guid",
+            "nullable": true
           },
           "maritalStatusId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "genderId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "primaryMobileNo": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "secondaryMobileNo": {
             "type": "string",
             "nullable": true
           },
           "primaryEmail": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "secondaryEmail": {
             "type": "string",
             "nullable": true
           },
-          "nationalityId": {
-            "type": "integer",
-            "format": "int32"
+          "nationality": {
+            "type": "string",
+            "nullable": true
           },
           "identificationType": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "identificationNo": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "permAddress": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "permDistrictId": {
             "type": "string",
-            "format": "guid"
+            "format": "guid",
+            "nullable": true
           },
           "permZipCode": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "presAddress": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "presDistrictId": {
             "type": "string",
@@ -1084,6 +1158,63 @@
           "contactAddress": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "ApplicantEducationModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "educationLevel": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "instituteName": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryOfInstitute": {
+            "type": "string",
+            "nullable": true
+          },
+          "majorSubject": {
+            "type": "string",
+            "nullable": true
+          },
+          "passingYear": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "resultType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "result": {
+            "type": "string",
+            "nullable": true
+          },
+          "resultScale": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "applicantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "board": {
+            "type": "string",
+            "nullable": true
+          },
+          "isHeighestEducation": {
+            "type": "boolean"
           }
         }
       },

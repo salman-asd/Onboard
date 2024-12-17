@@ -1,29 +1,28 @@
 ﻿namespace ASD.Onboard.Application.Features.ApplicantProfiles.Applicants.Commands;
 
 public record CreateApplicantCommand(
-    string FirstName,
-    string LastName,
-    string PreferredName,
-    DateOnly DOB,
-    int BloodGroupId,
-    Guid ReligionId,
-    int MaritalStatusId,
-    int GenderId,
-    string PrimaryMobileNo,
+    string? FirstName,
+    string? LastName,
+    string? PreferredName,
+    DateOnly? DOB,
+    int? BloodGroupId,
+    Guid? ReligionId,
+    int? MaritalStatusId,
+    int? GenderId,
+    string? PrimaryMobileNo,
     string? SecondaryMobileNo,
-    string PrimaryEmail,
+    string? PrimaryEmail,
     string? SecondaryEmail,
-    string Nationality,
-    int IdentificationType,
-    long IdentificationNo,
-    string PermAddress,
-    Guid PermDistrictId,
-    int PermZipCode,
-    string PresAddress,
+    string? Nationality,
+    int? IdentificationType,
+    long? IdentificationNo,
+    string? PermAddress,
+    Guid? PermDistrictId,
+    int? PermZipCode,
+    string? PresAddress,
     Guid? PresDistrictId,
     int? PresZipCode,
-    int ContactAddress
-    ) : IRequest<Guid>
+    int ContactAddress) : IRequest<Guid>
 {
     private class Mapping : Profile
     {

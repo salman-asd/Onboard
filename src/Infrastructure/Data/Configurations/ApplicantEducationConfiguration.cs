@@ -11,26 +11,30 @@ public class ApplicantEducationConfiguration : IEntityTypeConfiguration<Applican
         builder.HasKey(ae => ae.Id);
 
         builder.Property(ae => ae.EducationLevel)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.Property(ae => ae.InstituteName)
-            .IsRequired()
+            .IsRequired(false)
             .HasMaxLength(200);
 
         builder.Property(ae => ae.CountryOfInstitute)
-            .IsRequired()
+            .IsRequired(false)
             .HasMaxLength(100);
 
         builder.Property(ae => ae.MajorSubject)
-            .IsRequired()
+            .IsRequired(false)
             .HasMaxLength(100);
 
         builder.Property(ae => ae.PassingYear)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.Property(ae => ae.Result)
-            .IsRequired()
+            .IsRequired(false)
             .HasMaxLength(100);
+
+        builder.Property(ae => ae.ResultScale)
+           .IsRequired(false)
+           .HasColumnType("decimal(3, 2)");
 
         builder.HasOne(ae => ae.Applicant)
             .WithMany(a => a.ApplicantEducations)

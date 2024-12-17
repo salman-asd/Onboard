@@ -2,29 +2,28 @@
 
 public record UpdateApplicantCommand(
     Guid Id,
-    string FirstName,
-    string LastName,
-    string PreferredName,
-    DateOnly DOB,
-    int BloodGroupId,
-    Guid ReligionId,
-    int MaritalStatusId,
-    int GenderId,
-    string PrimaryMobileNo,
+    string? FirstName,
+    string? LastName,
+    string? PreferredName,
+    DateOnly? DOB,
+    int? BloodGroupId,
+    Guid? ReligionId,
+    int? MaritalStatusId,
+    int? GenderId,
+    string? PrimaryMobileNo,
     string? SecondaryMobileNo,
-    string PrimaryEmail,
+    string? PrimaryEmail,
     string? SecondaryEmail,
-    int NationalityId,
-    int IdentificationType,
-    long IdentificationNo,
-    string PermAddress,
-    Guid PermDistrictId,
-    int PermZipCode,
-    string PresAddress,
+    string? Nationality,
+    int? IdentificationType,
+    long? IdentificationNo,
+    string? PermAddress,
+    Guid? PermDistrictId,
+    int? PermZipCode,
+    string? PresAddress,
     Guid? PresDistrictId,
     int? PresZipCode,
-    int ContactAddress
-    ) : IRequest
+    int ContactAddress) : IRequest
 {
     private class Mapping : Profile
     {
