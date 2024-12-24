@@ -23,9 +23,9 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where T
         var userId = _user.Id;
         string? userName = string.Empty;
 
-        if (userId != null && userId != Guid.Empty)
+        if (!string.IsNullOrEmpty(userId))
         {
-            userName = await _identityService.GetUserNameAsync(userId.Value);
+            userName = await _identityService.GetUserNameAsync(userId);
         }
 
         _logger.LogInformation("ASD.Onboard Request: {Name} {@UserId} {@UserName} {@Request}",

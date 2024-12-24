@@ -1,9 +1,9 @@
 ﻿using ASD.Onboard.Application.Common.Interfaces;
-using ASD.Onboard.Domain.Constants;
 using ASD.Onboard.Infrastructure.Data;
 using ASD.Onboard.Infrastructure.Data.Interceptors;
+using ASD.Onboard.Infrastructure.Extensions;
 using ASD.Onboard.Infrastructure.Identity;
-using Microsoft.AspNetCore.Identity;
+using ASD.Onboard.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
@@ -32,22 +32,18 @@ public static class DependencyInjection
 
         services.AddScoped<ApplicationDbContextInitialiser>();
 
-        services.AddAuthentication()
-            .AddBearerToken(IdentityConstants.BearerScheme);
+        services.AddIdentity(configuration);
 
         services.AddAuthorizationBuilder();
 
-        services
-            .AddIdentityCore<AppUser>()
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddApiEndpoints();
-
         services.AddSingleton(TimeProvider.System);
-        services.AddTransient<IIdentityService, IdentityService>();
 
-        services.AddAuthorization(options =>
-            options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator)));
+        services.AddFluentEmail(configuration);
+
+        services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+        services.AddHostedService<EmailHostedService>();
+        services.AddSingleton<IEmailService, EmailService>();
+
 
         return services;
     }

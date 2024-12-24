@@ -2,5 +2,5 @@
 
 public interface IUser
 {
-    Guid? Id { get; }
+    string? Id { get; }
 }

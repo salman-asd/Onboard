@@ -11,10 +11,12 @@ public class Result
     public bool Succeeded { get; init; }
 
     public string[] Errors { get; init; }
+    public string Message { get; set; }
+    public object Value { get; set; }
 
     public static Result Success()
     {
-        return new Result(true, Array.Empty<string>());
+        return new Result(true, []);
     }
 
     public static Result Failure(IEnumerable<string> errors)

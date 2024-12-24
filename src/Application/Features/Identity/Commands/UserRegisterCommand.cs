@@ -1,19 +1,17 @@
-﻿
-namespace ASD.Onboard.Application.Features.Identity.Commands;
+﻿namespace ASD.Onboard.Application.Features.Identity.Commands;
 
 public record UserRegisterCommand(
     string FirstName,
     string LastName,
     string Email,
     string PhoneNo,
-    string Password): IRequest
-{
-}
+    string Password): IRequest<Result>;
 
-internal sealed class UserRegisterCommandHandler : IRequestHandler<UserRegisterCommand>
+internal sealed class UserRegisterCommandHandler(IIdentityService identityService) 
+    : IRequestHandler<UserRegisterCommand, Result>
 {
-    public async Task Handle(UserRegisterCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UserRegisterCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return await identityService.CreateUserAsync(request);
     }
 }

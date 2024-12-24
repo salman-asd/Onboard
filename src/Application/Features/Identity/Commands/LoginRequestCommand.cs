@@ -1,12 +1,14 @@
-﻿
+﻿using ASD.Onboard.Application.Features.Identity.Models;
+
 namespace ASD.Onboard.Application.Features.Identity.Commands;
 
-public record LoginRequestCommand(string Username, string Password): IRequest;
+public record LoginRequestCommand(string Username, string Password): IRequest<AuthResponse>;
 
-internal sealed class LoginRequestCommandHandler : IRequestHandler<LoginRequestCommand>
+internal sealed class LoginRequestCommandHandler(IAuthService authService) 
+    : IRequestHandler<LoginRequestCommand, AuthResponse>
 {
-    public async Task Handle(LoginRequestCommand request, CancellationToken cancellationToken)
+    public async Task<AuthResponse> Handle(LoginRequestCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return await authService.LoginAsync(request.Username, request.Password);
     }
 }

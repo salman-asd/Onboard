@@ -7,3 +7,4 @@ global using MediatR;
 
 global using ASD.Onboard.Domain.Entities.Applicants;
 global using ASD.Onboard.Application.Common.Interfaces;
+global using ASD.Onboard.Application.Common.Models;

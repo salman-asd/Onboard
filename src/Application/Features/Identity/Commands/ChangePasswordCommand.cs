@@ -1,12 +1,11 @@
-﻿
-namespace ASD.Onboard.Application.Features.Identity.Commands;
+﻿namespace ASD.Onboard.Application.Features.Identity.Commands;
 
-public record ChangePasswordCommand(string OldPassword, string NewPassword): IRequest;
+public record ChangePasswordCommand(string OldPassword, string NewPassword): IRequest<Result>;
 
-internal sealed class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand>
+internal sealed class ChangePasswordCommandHandler(IAuthService authService, IUser user) : IRequestHandler<ChangePasswordCommand, Result>
 {
-    public async Task Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return await authService.ChangePasswordAsync(user.Id, request.OldPassword, request.NewPassword);
     }
 }

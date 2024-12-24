@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ASD.Onboard.Infrastructure.Data;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
-    : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>(options), IApplicationDbContext
+    : IdentityDbContext<AppUser>(options), IApplicationDbContext
 {
 
     #region  Applicant Profile
@@ -24,12 +24,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         // Rename ASP.NET Identity tables
         builder.Entity<AppUser>().ToTable("Users");
-        builder.Entity<IdentityRole<Guid>>().ToTable("Roles");
-        builder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
-        builder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
-        builder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
-        builder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
-        builder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
+        builder.Entity<IdentityRole>().ToTable("Roles");
+        builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
+        builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
+        builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
+        builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
+        builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
 
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }

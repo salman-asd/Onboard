@@ -1,16 +1,13 @@
 ﻿using ASD.Onboard.Application.Common.Models;
+using ASD.Onboard.Application.Features.Identity.Commands;
 
 namespace ASD.Onboard.Application.Common.Interfaces;
 
 public interface IIdentityService
 {
-    Task<string?> GetUserNameAsync(Guid userId);
+    Task<string?> GetUserNameAsync(string userId);
 
-    Task<bool> IsInRoleAsync(Guid userId, string role);
+    Task<Result> CreateUserAsync(UserRegisterCommand request);
 
-    Task<bool> AuthorizeAsync(Guid userId, string policyName);
-
-    Task<(Result Result, Guid UserId)> CreateUserAsync(string userName, string password);
-
-    Task<Result> DeleteUserAsync(Guid userId);
+    Task<Result> DeleteUserAsync(string userId);
 }

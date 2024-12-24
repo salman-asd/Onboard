@@ -8,14 +8,14 @@ namespace ASD.Onboard.Application.Common.Behaviours;
 public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly IUser _user;
-    private readonly IIdentityService _identityService;
+    private readonly IAuthService _authService;
 
     public AuthorizationBehaviour(
         IUser user,
-        IIdentityService identityService)
+        IAuthService identityService)
     {
         _user = user;
-        _identityService = identityService;
+        _authService = identityService;
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -41,7 +41,7 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
                 {
                     foreach (var role in roles)
                     {
-                        var isInRole = await _identityService.IsInRoleAsync(_user.Id.Value, role.Trim());
+                        var isInRole = await _authService.IsInRoleAsync(_user.Id, role.Trim());
                         if (isInRole)
                         {
                             authorized = true;
@@ -63,7 +63,7 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
             {
                 foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
                 {
-                    var authorized = await _identityService.AuthorizeAsync(_user.Id.Value, policy);
+                    var authorized = await _authService.AuthorizeAsync(_user.Id, policy);
 
                     if (!authorized)
                     {
