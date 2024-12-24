@@ -2,6 +2,6 @@
 
 namespace ASD.Onboard.Infrastructure.Identity;
 
-public class ApplicationUser : IdentityUser
+public class AppRole : IdentityRole<Guid>
 {
 }

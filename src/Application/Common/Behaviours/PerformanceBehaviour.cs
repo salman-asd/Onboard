@@ -36,12 +36,12 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
         if (elapsedMilliseconds > 500)
         {
             var requestName = typeof(TRequest).Name;
-            var userId = _user.Id ?? string.Empty;
+            var userId = _user.Id;
             var userName = string.Empty;
 
-            if (!string.IsNullOrEmpty(userId))
+            if (userId != null && userId != Guid.Empty)
             {
-                userName = await _identityService.GetUserNameAsync(userId);
+                userName = await _identityService.GetUserNameAsync(userId.Value);
             }
 
             _logger.LogWarning("ASD.Onboard Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",

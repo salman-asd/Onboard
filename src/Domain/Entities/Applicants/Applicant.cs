@@ -5,6 +5,7 @@ public class Applicant : BaseAuditableEntity
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? PreferredName { get; set; }
+    public Guid UserId { get; set; }
     public DateOnly? DOB { get; set; }
     public int? BloodGroupId { get; set; }
     public Guid? ReligionId { get; set; }
