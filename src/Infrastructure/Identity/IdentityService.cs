@@ -1,9 +1,7 @@
 ﻿using ASD.Onboard.Application.Common.Interfaces;
 using ASD.Onboard.Application.Common.Models;
 using ASD.Onboard.Application.Features.Identity.Commands;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace ASD.Onboard.Infrastructure.Identity;
 

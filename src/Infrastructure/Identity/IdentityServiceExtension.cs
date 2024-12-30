@@ -5,6 +5,7 @@ using ASD.Onboard.Infrastructure.Identity.Options;
 using ASD.Onboard.Infrastructure.Identity.OptionSetup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,6 +28,10 @@ internal static class IdentityServiceExtension
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
 
+        //services.AddIdentity<AppUser, IdentityRole>()
+        //    .AddEntityFrameworkStores<ApplicationDbContext>()
+        //    .AddDefaultTokenProviders();
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -41,9 +46,9 @@ internal static class IdentityServiceExtension
             options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator));
         });
 
-        services.AddScoped<ITokenProvider, TokenProvider>();
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddTransient<ITokenProvider, TokenProvider>();
+        services.AddTransient<IAuthService, AuthService>();
+        services.AddTransient<IIdentityService, IdentityService>();
 
         return services;
     }

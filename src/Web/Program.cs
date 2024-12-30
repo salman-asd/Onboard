@@ -17,7 +17,6 @@ builder.Services.AddCors(options =>
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddKeyVaultIfConfigured(builder.Configuration);
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
@@ -52,14 +51,16 @@ app.UseCors(Allow_Origin_Policy);
 app.UseRouting();
 app.UseAuthorization();
 
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller}/{action}");
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller}/{action}");
 
 // Optionally add an API-specific route
 app.MapControllerRoute(
     name: "api",
     pattern: "api/{controller}/{action}");
+
+app.MapControllers();
 
 //app.MapRazorPages();
 
@@ -69,7 +70,7 @@ app.UseExceptionHandler(options => { });
 
 app.Map("/", () => Results.Redirect("/api"));
 
-app.MapEndpoints();
+//app.MapEndpoints();
 
 app.Run();
 

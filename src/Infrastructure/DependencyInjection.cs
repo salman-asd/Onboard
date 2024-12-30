@@ -42,7 +42,7 @@ public static class DependencyInjection
 
         services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
         services.AddHostedService<EmailHostedService>();
-        services.AddSingleton<IEmailService, EmailService>();
+        services.AddScoped<IEmailService, EmailService>();
 
 
         return services;
