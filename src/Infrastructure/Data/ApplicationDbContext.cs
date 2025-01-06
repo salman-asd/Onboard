@@ -17,7 +17,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Applicant> Applicants => Set<Applicant>();
     public DbSet<ApplicantEducation> ApplicantEducations => Set<ApplicantEducation>();
     #endregion
-
+    public DbSet<EmailOutboxMessage> EmailOutboxes => Set<EmailOutboxMessage>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

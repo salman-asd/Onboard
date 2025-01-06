@@ -1,9 +1,11 @@
-﻿using ASD.Onboard.Application.Common.Interfaces;
+﻿using ASD.Onboard.Application.Common.Extensions;
+using ASD.Onboard.Application.Common.Interfaces;
 using ASD.Onboard.Application.Common.Models;
 using ASD.Onboard.Application.Features.Identity.Models;
 using ASD.Onboard.Infrastructure.Identity.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace ASD.Onboard.Infrastructure.Identity;
@@ -15,16 +17,24 @@ internal sealed class AuthService(
     IUserClaimsPrincipalFactory<AppUser> userClaimsPrincipalFactory,
     IAuthorizationService authorizationService,
     IBackgroundTaskQueue backgroundTaskQueue,
-    IEmailService emailService) : IAuthService
+    IEmailService emailService,
+    IConfiguration configuration,
+    ITokenEncrypDecryptService tokenEncrypDecryptService) : IAuthService
 {
     private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 
     public async Task<AuthResponse> LoginAsync(string username, string password)
     {
+        Guard.Against.NullOrEmpty(username, nameof(username));
+        Guard.Against.NullOrEmpty(password, nameof(password));
+
         var user = await userManager.FindByEmailAsync(username);
 
-        if (user == null || !await userManager.CheckPasswordAsync(user, password))
-            throw new Exception("Invalid credentials.");
+        if (user is null || !await userManager.CheckPasswordAsync(user, password))
+            Guard.Against.NotFound(username, username, "User not found or invalid credentials.");
+
+        if (!user.EmailConfirmed)
+            Guard.Against.EmailNotConfirmed(user.EmailConfirmed, nameof(user.EmailConfirmed));
 
         var roles = await userManager.GetRolesAsync(user);
 
@@ -58,7 +68,7 @@ internal sealed class AuthService(
         // Queue the job to send the password reset email with retry mechanism
         await backgroundTaskQueue.EnqueueWithRetry(async cancellationToken =>
         {
-            await emailService.SendHtmlEmail(
+            await emailService.SendHtmlEmailAsync(
                 email,
                 "Password Reset Request",
                 $"We received a request to reset your password. Click the link to reset your password: {resetLink}. If you did not request this, please ignore this email."
@@ -74,46 +84,47 @@ internal sealed class AuthService(
         var user = await userManager.FindByIdAsync(userId);
 
         if (user is null)
-            throw new Exception("User not found.");
+            Guard.Against.NotFound(userId, user);
 
         var identityResult = await userManager.ChangePasswordAsync(user, oldPassword, newPassword);
 
         return identityResult.ToApplicationResult();
     }
 
-    public async Task<Result> ConfirmEmailAsync(string email, string token)
+    public async Task<Result> ConfirmEmailAsync(string email, string token, CancellationToken cancellationToken = default)
     {
-        var user = await userManager.FindByEmailAsync(email);
-
-        if (user == null)
-            throw new Exception("User not found.");
-
-        var result = await userManager.ConfirmEmailAsync(user, token);
-
-        return result.ToApplicationResult();
-    }
-
-    public async Task<Result> SendConfirmationEmailAsync(string email)
-    {
-        var user = await userManager.FindByEmailAsync(email);
-
-        if (user == null)
-            throw new Exception("User not found.");
-
-        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-        var confirmLink = $"https://yourapp.com/confirm-email?email={email}&token={Uri.EscapeDataString(token)}";
-
-        // Queue the task to send the confirmation email with retry mechanism
-        await backgroundTaskQueue.EnqueueWithRetry(async cancellationToken =>
+        try
         {
-            await emailService.SendEmail(
-                email,
-                "Confirm Your Email",
-                $"Click the link to confirm your email: {confirmLink}"
-            );
-        }, 3);
+            Guard.Against.NullOrWhiteSpace(email, nameof(email));
+            Guard.Against.NullOrWhiteSpace(token, nameof(token));
 
-        return Result.Success();
+            var user = await userManager.FindByEmailAsync(email);
+            if (user == null)
+                return Result.Failure(["User not found"]);
+
+            if (user.EmailConfirmed)
+                return Result.Failure(["Email already confirmed"]);
+
+
+            var decryptedToken = tokenEncrypDecryptService.DecryptToken(token);
+            // Token validation will automatically check expiration
+            var result = await userManager.ConfirmEmailAsync(user, decryptedToken);
+            if (!result.Succeeded)
+            {
+                // Check if token is expired
+                if (result.Errors.Any(e => e.Code == "InvalidToken"))
+                {
+                    return Result.Failure(["Confirmation link has expired. Please request a new one."]);
+                }
+                return Result.Failure(result.Errors.Select(e => e.Description).ToArray());
+            }
+
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure([$"Email confirmation failed: {ex.Message}"]);
+        }
     }
 
     public async Task<Result> ResetPasswordAsync(string email, string token, string newPassword)

@@ -1,5 +1,8 @@
-﻿namespace ASD.Onboard.Application.Features.Identity.Commands;
+﻿using ASD.Onboard.Application.Common.Security;
 
+namespace ASD.Onboard.Application.Features.Identity.Commands;
+
+[Authorize]
 public record ChangePasswordCommand(
     string OldPassword, 
     string NewPassword): IRequest<Result>;

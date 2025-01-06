@@ -1,7 +1,7 @@
 ﻿using ASD.Onboard.Application.Common.Interfaces;
 using ASD.Onboard.Infrastructure.Data;
 using ASD.Onboard.Infrastructure.Data.Interceptors;
-using ASD.Onboard.Infrastructure.Extensions;
+using ASD.Onboard.Infrastructure.EmailCommnunication;
 using ASD.Onboard.Infrastructure.Identity;
 using ASD.Onboard.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -41,8 +41,6 @@ public static class DependencyInjection
         services.AddFluentEmail(configuration);
 
         services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
-        services.AddHostedService<EmailHostedService>();
-        services.AddScoped<IEmailService, EmailService>();
 
 
         return services;

@@ -1,4 +1,5 @@
 ﻿using ASD.Onboard.Application.Common.Exceptions;
+using ASD.Onboard.Application.Common.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ public class CustomExceptionHandler : IExceptionHandler
                 { typeof(NotFoundException), HandleNotFoundException },
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
+                { typeof(EmailNotConfirmedException), HandleEmailNotConfirmedException },
             };
     }
 
@@ -84,4 +86,20 @@ public class CustomExceptionHandler : IExceptionHandler
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.3"
         });
     }
+
+    private async Task HandleEmailNotConfirmedException(HttpContext httpContext, Exception ex)
+    {
+        var exception = (EmailNotConfirmedException)ex;
+
+        httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+
+        await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
+        {
+            Status = StatusCodes.Status401Unauthorized,
+            Title = "Unauthorized",
+            Detail = exception.Message,
+            Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
+        });
+    }
+
 }

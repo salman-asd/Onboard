@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace ASD.Onboard.Infrastructure.Services;
+namespace ASD.Onboard.Infrastructure.EmailCommnunication;
 
 public class EmailHostedService : BackgroundService
 {

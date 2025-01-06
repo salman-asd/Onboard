@@ -9,6 +9,7 @@ public interface IAuthService
     Task<Result> ForgotPasswordAsync(string email);
     Task<Result> ChangePasswordAsync(string userId, string oldPassword, string newPassword);
     Task<Result> ResetPasswordAsync(string email, string token, string newPassword);
+    Task<Result> ConfirmEmailAsync(string email, string token, CancellationToken cancellationToken = default);
     Task<bool> IsInRoleAsync(string userId, string role);
     Task<bool> AuthorizeAsync(string userId, string policyName);
 }

@@ -3,9 +3,9 @@ using ASD.Onboard.Domain.Constants;
 using ASD.Onboard.Infrastructure.Data;
 using ASD.Onboard.Infrastructure.Identity.Options;
 using ASD.Onboard.Infrastructure.Identity.OptionSetup;
+using ASD.Onboard.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,16 +17,39 @@ internal static class IdentityServiceExtension
     {
         services.ConfigureOptions<JwtOptions>();
 
-        services.AddIdentity<AppUser, IdentityRole>(options =>
+        // Configure token providers first
+        services.Configure<DataProtectionTokenProviderOptions>(options =>
         {
+            options.TokenLifespan = TimeSpan.FromHours(
+                configuration.GetValue<int>("EmailConfirmationTokenExpiryHours", 24));
+        });
+
+        // Configure custom email confirmation token provider
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.SignIn.RequireConfirmedEmail = true;
+            options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;
+
+            // Password settings
             options.Password.RequireDigit = true;
             options.Password.RequireLowercase = true;
             options.Password.RequireUppercase = true;
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequiredLength = 8;
-        })
-        .AddEntityFrameworkStores<ApplicationDbContext>()
-        .AddDefaultTokenProviders();
+
+            // Lockout settings
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.AllowedForNewUsers = true;
+
+            // User settings
+            options.User.RequireUniqueEmail = true;
+        });
+
+        services.AddIdentity<AppUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders()
+                .AddTokenProvider<DataProtectorTokenProvider<AppUser>>("EmailConfirmation");
 
         //services.AddIdentity<AppUser, IdentityRole>()
         //    .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -49,6 +72,7 @@ internal static class IdentityServiceExtension
         services.AddTransient<ITokenProvider, TokenProvider>();
         services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IIdentityService, IdentityService>();
+        services.AddTransient<ITokenEncrypDecryptService, TokenEncryptDecryptService>();
 
         return services;
     }
