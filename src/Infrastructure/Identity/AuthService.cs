@@ -1,10 +1,13 @@
-﻿using ASD.Onboard.Application.Common.Extensions;
+﻿using System.Text;
+using ASD.Onboard.Application.Common.Extensions;
 using ASD.Onboard.Application.Common.Interfaces;
 using ASD.Onboard.Application.Common.Models;
 using ASD.Onboard.Application.Features.Identity.Models;
+using ASD.Onboard.Infrastructure.EmailCommnunication;
 using ASD.Onboard.Infrastructure.Identity.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
@@ -31,7 +34,7 @@ internal sealed class AuthService(
         var user = await userManager.FindByEmailAsync(username);
 
         if (user is null || !await userManager.CheckPasswordAsync(user, password))
-            Guard.Against.NotFound(username, username, "User not found or invalid credentials.");
+            Guard.Against.CredentialNotFound(user);
 
         if (!user.EmailConfirmed)
             Guard.Against.EmailNotConfirmed(user.EmailConfirmed, nameof(user.EmailConfirmed));
@@ -41,42 +44,6 @@ internal sealed class AuthService(
         var token = tokenProvider.GenerateAccessToken(user.Id, user.Email, roles);
 
         return new AuthResponse(token);
-    }
-
-    public async Task<Result> ForgotPasswordAsync(string email)
-    {
-        // Find the user by email
-        var user = await userManager.FindByEmailAsync(email);
-
-        // Check if user exists
-        if (user == null)
-            throw new Exception("User not found.");
-
-        // Optional: Ensure the user's email is confirmed
-        if (!user.EmailConfirmed)
-            throw new Exception("Email not confirmed.");
-
-        // Generate password reset token
-        var token = await userManager.GeneratePasswordResetTokenAsync(user);
-
-        // Encode the token for safe transmission in a URL
-        var encodedToken = Uri.EscapeDataString(token);
-
-        // Construct the password reset link
-        var resetLink = $"https://yourapp.com/reset-password?email={Uri.EscapeDataString(email)}&token={encodedToken}";
-
-        // Queue the job to send the password reset email with retry mechanism
-        await backgroundTaskQueue.EnqueueWithRetry(async cancellationToken =>
-        {
-            await emailService.SendHtmlEmailAsync(
-                email,
-                "Password Reset Request",
-                $"We received a request to reset your password. Click the link to reset your password: {resetLink}. If you did not request this, please ignore this email."
-            );
-        }, 3);
-
-
-        return Result.Success();
     }
 
     public async Task<Result> ChangePasswordAsync(string userId, string oldPassword, string newPassword)
@@ -127,16 +94,66 @@ internal sealed class AuthService(
         }
     }
 
-    public async Task<Result> ResetPasswordAsync(string email, string token, string newPassword)
+    public async Task<Result> ForgotPasswordAsync(string email)
     {
         var user = await userManager.FindByEmailAsync(email);
 
-        if (user == null)
-            throw new Exception("User not found.");
+        if (user is null)
+            Guard.Against.CredentialNotFound(user);
 
-        var result = await userManager.ResetPasswordAsync(user, token, newPassword);
+        if (!user.EmailConfirmed)
+            Guard.Against.EmailNotConfirmed(user.EmailConfirmed, nameof(user.EmailConfirmed));
 
-        return result.ToApplicationResult();
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
+        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+        var encodedEmail = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(email));
+
+        var clientBaseUrl = configuration["ClientBaseUrl"];
+        var resetUrl = configuration["ResetUrl"];
+        var resetLink = $"{clientBaseUrl}{resetUrl}?email={encodedEmail}&token={encodedToken}";
+
+        // Queue the job to send the password reset email with retry mechanism
+        await backgroundTaskQueue.EnqueueWithRetry(async cancellationToken =>
+        {
+            var emailTemplate = @$"
+                    <h2>Password Reset Request</h2>
+                    <p>We received a request to reset your password.</p>
+                    <p>Click the link below to reset your password:</p>
+                    <a href='{resetLink}'>Reset Password</a>
+                    <p>If you did not request this, please ignore this email.</p>
+                    <p>This link will expire in 24 hours.</p>";
+
+            await emailService.SendHtmlEmailAsync(
+                email,
+                "Password Reset Request",
+                emailTemplate
+            );
+        }, 3);
+
+
+        return Result.Success();
+    }
+
+    public async Task<Result> ResetPasswordAsync(string email, string token, string newPassword)
+    {
+        try
+        {
+            var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+            var decodedEmail = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(email));
+
+            var user = await userManager.FindByEmailAsync(decodedEmail);
+
+            if (user is null)
+                Guard.Against.CredentialNotFound(user);
+
+            var result = await userManager.ResetPasswordAsync(user, decodedToken, newPassword);
+
+            return result.ToApplicationResult();
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure([$"An error occurred: {ex.Message}"]);
+        }
     }
 
     public async Task<bool> IsInRoleAsync(string userId, string role)

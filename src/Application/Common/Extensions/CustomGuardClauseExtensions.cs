@@ -10,6 +10,14 @@ public static class CustomGuardClauseExtensions
         }
     }
 
+    public static void CredentialNotFound(this IGuardClause guardClause, object user)
+    {
+        if (user is null)
+        {
+            throw new EmailNotConfirmedException("User not found or invalid credentials.");
+        }
+    }
+
     public static void InvalidCredentials(this IGuardClause guardClause, bool condition, string parameterName)
     {
         if (condition)
@@ -22,5 +30,10 @@ public static class CustomGuardClauseExtensions
 public class EmailNotConfirmedException : UnauthorizedAccessException
 {
     public EmailNotConfirmedException(string message) : base(message) { }
+}
+
+public class CredentialNotFoundException : UnauthorizedAccessException
+{
+    public CredentialNotFoundException(string message) : base(message) { }
 }
 
