@@ -10,17 +10,17 @@ namespace ASD.Onboard.Infrastructure.Identity;
 internal sealed class TokenProvider(IOptions<JwtSettings> jwtSettings): ITokenProvider
 {
     private readonly JwtSettings _jwtSettings = jwtSettings.Value;
-    public string GenerateAccessToken(string userId, string email, IList<string> roles)
+    public string GenerateAccessToken(AppUser user, IList<string> roles)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
             {
-                new(JwtRegisteredClaimNames.Sub, userId),
+                new(JwtRegisteredClaimNames.Sub, user.Id),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new(ClaimTypes.Email, email),
-                new(ClaimTypes.Name, email.Split('@').First().ToLower())
+                new(ClaimTypes.Email, user.Email),
+                new(ClaimTypes.Name, user.UserName.Split('@').First().ToLower())
             };
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));

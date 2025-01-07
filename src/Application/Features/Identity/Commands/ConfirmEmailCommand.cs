@@ -9,6 +9,10 @@ internal sealed class ConfirmEmailCommandHandler(
 {
     public async Task<Result> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
     {
-        return await authService.ConfirmEmailAsync(request.Email, request.Token, cancellationToken);
+        if (!Guid.TryParse(request.Token, out var tokenId)) 
+        {
+            return Result.Failure(["Invalid token format."]); 
+        }
+        return await authService.ConfirmEmailAsync(request.Email, tokenId, cancellationToken);
     }
 }

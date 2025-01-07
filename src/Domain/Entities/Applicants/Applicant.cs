@@ -5,7 +5,7 @@ public class Applicant : BaseAuditableEntity
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? PreferredName { get; set; }
-    public Guid UserId { get; set; }
+    public string UserId { get; set; }
     public DateOnly? DOB { get; set; }
     public int? BloodGroupId { get; set; }
     public Guid? ReligionId { get; set; }
@@ -24,9 +24,25 @@ public class Applicant : BaseAuditableEntity
     public string? PresAddress { get; set; }
     public Guid? PresDistrictId { get; set; }
     public int? PresZipCode { get; set; }
-    public int ContactAddress { get; set; }
+    public int? ContactAddress { get; set; }
 
     public virtual List<ApplicantEducation> ApplicantEducations { get; set; } = [];
+
+    public static Applicant Create(
+        string userId,
+        string firstName, 
+        string lastName, 
+        string email)
+    {
+        return new Applicant
+        {
+            UserId = userId,
+            FirstName = firstName,
+            LastName = lastName,
+            PreferredName = firstName,
+            PrimaryEmail = email
+        };
+    }
 }
 
 

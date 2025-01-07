@@ -3,12 +3,13 @@ using ASD.Onboard.Application.Common.Extensions;
 using ASD.Onboard.Application.Common.Interfaces;
 using ASD.Onboard.Application.Common.Models;
 using ASD.Onboard.Application.Features.Identity.Models;
-using ASD.Onboard.Infrastructure.EmailCommnunication;
+using ASD.Onboard.Domain.Entities.Applicants;
 using ASD.Onboard.Infrastructure.Identity.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace ASD.Onboard.Infrastructure.Identity;
@@ -22,7 +23,8 @@ internal sealed class AuthService(
     IBackgroundTaskQueue backgroundTaskQueue,
     IEmailService emailService,
     IConfiguration configuration,
-    ITokenEncrypDecryptService tokenEncrypDecryptService) : IAuthService
+    IEmailConfirmationService emailConfirmationService,
+    ILogger<AuthService> logger) : IAuthService
 {
     private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 
@@ -42,46 +44,14 @@ internal sealed class AuthService(
 
         var roles = await userManager.GetRolesAsync(user);
 
-        var token = tokenProvider.GenerateAccessToken(user.Id, user.Email, roles);
+        var token = tokenProvider.GenerateAccessToken(user, roles);
 
         return new AuthResponse(token);
     }
 
-
-    public async Task<Result> ConfirmEmailAsync(string email, string token, CancellationToken cancellationToken = default)
+    public async Task<Result> ConfirmEmailAsync(string email, Guid tokenId, CancellationToken cancellationToken = default)
     {
-        try
-        {
-            Guard.Against.NullOrWhiteSpace(email, nameof(email));
-            Guard.Against.NullOrWhiteSpace(token, nameof(token));
-
-            var user = await userManager.FindByEmailAsync(email);
-            if (user == null)
-                return Result.Failure(["User not found"]);
-
-            if (user.EmailConfirmed)
-                return Result.Failure(["Email already confirmed"]);
-
-
-            var decryptedToken = tokenEncrypDecryptService.DecryptToken(token);
-            // Token validation will automatically check expiration
-            var result = await userManager.ConfirmEmailAsync(user, decryptedToken);
-            if (!result.Succeeded)
-            {
-                // Check if token is expired
-                if (result.Errors.Any(e => e.Code == "InvalidToken"))
-                {
-                    return Result.Failure(["Confirmation link has expired. Please request a new one."]);
-                }
-                return Result.Failure(result.Errors.Select(e => e.Description).ToArray());
-            }
-
-            return Result.Success();
-        }
-        catch (Exception ex)
-        {
-            return Result.Failure([$"Email confirmation failed: {ex.Message}"]);
-        }
+        return await emailConfirmationService.ConfirmEmailAsync(email, tokenId, cancellationToken);
     }
 
     public async Task<Result> ChangePasswordAsync(string userId, string oldPassword, string newPassword)

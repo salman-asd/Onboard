@@ -4,6 +4,7 @@ using ASD.Onboard.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASD.Onboard.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250107120306_EmailConfirmationTokenAdded")]
+    partial class EmailConfirmationTokenAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,7 +35,7 @@ namespace ASD.Onboard.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ContactAddress")
+                    b.Property<int>("ContactAddress")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(1);
@@ -331,13 +334,17 @@ namespace ASD.Onboard.Infrastructure.Data.Migrations
                     b.Property<bool>("IsUsed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId", "IsUsed", "ExpiryTime");
+                    b.HasIndex("UserId");
 
                     b.ToTable("EmailConfirmationTokens");
                 });

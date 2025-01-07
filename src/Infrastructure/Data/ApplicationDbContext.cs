@@ -6,10 +6,11 @@ using ASD.Onboard.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ASD.Onboard.Infrastructure.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
     : IdentityDbContext<AppUser>(options), IApplicationDbContext
 {
 
@@ -18,6 +19,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ApplicantEducation> ApplicantEducations => Set<ApplicantEducation>();
     #endregion
     public DbSet<EmailOutboxMessage> EmailOutboxes => Set<EmailOutboxMessage>();
+    public DbSet<EmailConfirmationToken> EmailConfirmationTokens => Set<EmailConfirmationToken>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -31,6 +34,40 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
         builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
 
+        ConfigureEmailConfirmationToken(builder);
+
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
+    private static void ConfigureEmailConfirmationToken(ModelBuilder builder)
+    {
+        builder.Entity<EmailConfirmationToken>(entity =>
+        {
+            entity.HasKey(t => t.Id);
+
+            entity.Property(t => t.UserId)
+                .IsRequired();
+
+            entity.Property(t => t.ExpiryTime)
+                .IsRequired();
+
+            entity.Property(t => t.IsUsed)
+                .IsRequired();
+
+            entity.Property(t => t.CreatedAt)
+                .IsRequired();
+
+            // Index for faster lookups
+            entity.HasIndex(t => new { t.UserId, t.IsUsed, t.ExpiryTime });
+
+            // Relationship with User
+            //entity.HasOne<AppUser>()
+            //    .WithMany()
+            //    .HasForeignKey(t => t.UserId)
+            //    .OnDelete(DeleteBehavior.Cascade);
+        });
+
+    }
+
 }
+
+

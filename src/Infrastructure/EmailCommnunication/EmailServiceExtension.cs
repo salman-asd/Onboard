@@ -11,7 +11,11 @@ internal static class EmailServiceExtension
 {
     public static void AddFluentEmail(this IServiceCollection services, IConfiguration configuration)
     {
-        var emailSettings = configuration.GetSection("EmailSettings").Get<EmailSettings>();
+        // Configure IOptions
+        services.Configure<EmailSettings>(configuration.GetSection(EmailSettings.EMAIL_SETTINGS));
+
+        //services.ConfigureOptions<EmailSettings>();
+        var emailSettings = configuration.GetSection(EmailSettings.EMAIL_SETTINGS).Get<EmailSettings>();
         Guard.Against.Null(emailSettings, nameof(emailSettings), "EmailSettings configuration section is missing.");
 
         // Validate essential email settings using Guard Clauses
@@ -50,7 +54,7 @@ internal static class EmailServiceExtension
             .AddRazorRenderer()
             .AddSmtpSender(smtpClient);
 
-        services.AddSingleton(emailSettings);
+        //services.AddSingleton(emailSettings);
         services.AddHostedService<EmailHostedService>();
         services.AddHostedService<EmailProcessingService>();
         services.AddScoped<IEmailService, EmailService>();

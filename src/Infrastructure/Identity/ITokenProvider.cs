@@ -2,5 +2,5 @@
 
 public interface ITokenProvider
 {
-    string GenerateAccessToken(string userId, string email, IList<string> roles);
+    string GenerateAccessToken(AppUser user, IList<string> roles);
 }

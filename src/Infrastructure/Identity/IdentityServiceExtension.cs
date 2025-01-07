@@ -1,6 +1,7 @@
 ﻿using ASD.Onboard.Application.Common.Interfaces;
 using ASD.Onboard.Domain.Constants;
 using ASD.Onboard.Infrastructure.Data;
+using ASD.Onboard.Infrastructure.EmailCommnunication;
 using ASD.Onboard.Infrastructure.Identity.Options;
 using ASD.Onboard.Infrastructure.Identity.OptionSetup;
 using ASD.Onboard.Infrastructure.Services;
@@ -73,7 +74,8 @@ internal static class IdentityServiceExtension
         services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IIdentityService, IdentityService>();
         services.AddTransient<ITokenEncrypDecryptService, TokenEncryptDecryptService>();
-
+        services.AddScoped<ITokenStorageService, DatabaseTokenStorage>();
+        services.AddScoped<IEmailConfirmationService, EmailConfirmationService>();
         return services;
     }
 }
