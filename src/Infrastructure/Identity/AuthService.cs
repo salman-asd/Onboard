@@ -33,8 +33,9 @@ internal sealed class AuthService(
 
         var user = await userManager.FindByEmailAsync(username);
 
-        if (user is null || !await userManager.CheckPasswordAsync(user, password))
-            Guard.Against.CredentialNotFound(user);
+        Guard.Against.InvalidUserCredential(user);
+
+        Guard.Against.InvalidCredential(await userManager.CheckPasswordAsync(user, password));
 
         if (!user.EmailConfirmed)
             Guard.Against.EmailNotConfirmed(user.EmailConfirmed, nameof(user.EmailConfirmed));
@@ -46,17 +47,6 @@ internal sealed class AuthService(
         return new AuthResponse(token);
     }
 
-    public async Task<Result> ChangePasswordAsync(string userId, string oldPassword, string newPassword)
-    {
-        var user = await userManager.FindByIdAsync(userId);
-
-        if (user is null)
-            Guard.Against.NotFound(userId, user);
-
-        var identityResult = await userManager.ChangePasswordAsync(user, oldPassword, newPassword);
-
-        return identityResult.ToApplicationResult();
-    }
 
     public async Task<Result> ConfirmEmailAsync(string email, string token, CancellationToken cancellationToken = default)
     {
@@ -94,12 +84,25 @@ internal sealed class AuthService(
         }
     }
 
+    public async Task<Result> ChangePasswordAsync(string userId, string oldPassword, string newPassword)
+    {
+        var user = await userManager.FindByIdAsync(userId);
+
+        if (user is null)
+            Guard.Against.NotFound(userId, user);
+
+        var identityResult = await userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+
+        return identityResult.ToApplicationResult();
+    }
+
+
     public async Task<Result> ForgotPasswordAsync(string email)
     {
         var user = await userManager.FindByEmailAsync(email);
 
         if (user is null)
-            Guard.Against.CredentialNotFound(user);
+            Guard.Against.InvalidUserCredential(user);
 
         if (!user.EmailConfirmed)
             Guard.Against.EmailNotConfirmed(user.EmailConfirmed, nameof(user.EmailConfirmed));
@@ -144,7 +147,7 @@ internal sealed class AuthService(
             var user = await userManager.FindByEmailAsync(decodedEmail);
 
             if (user is null)
-                Guard.Against.CredentialNotFound(user);
+                Guard.Against.InvalidUserCredential(user);
 
             var result = await userManager.ResetPasswordAsync(user, decodedToken, newPassword);
 

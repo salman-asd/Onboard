@@ -1,4 +1,6 @@
-﻿namespace ASD.Onboard.Application.Common.Extensions;
+﻿using ASD.Onboard.Application.Common.Exceptions;
+
+namespace ASD.Onboard.Application.Common.Extensions;
 
 public static class CustomGuardClauseExtensions
 {
@@ -10,30 +12,20 @@ public static class CustomGuardClauseExtensions
         }
     }
 
-    public static void CredentialNotFound(this IGuardClause guardClause, object user)
+    public static void InvalidUserCredential(this IGuardClause guardClause, object user)
     {
         if (user is null)
         {
-            throw new EmailNotConfirmedException("User not found or invalid credentials.");
+            throw new InvalidUserCredentialException("User not found or invalid credentials.");
         }
     }
 
-    public static void InvalidCredentials(this IGuardClause guardClause, bool condition, string parameterName)
+    public static void InvalidCredential(this IGuardClause guardClause, bool isValid)
     {
-        if (condition)
+        if (!isValid)
         {
-            throw new UnauthorizedAccessException("Invalid credentials. Please check your email and password.");
+            throw new InvalidUserCredentialException("User not found or invalid credentials.");
         }
     }
-}
-
-public class EmailNotConfirmedException : UnauthorizedAccessException
-{
-    public EmailNotConfirmedException(string message) : base(message) { }
-}
-
-public class CredentialNotFoundException : UnauthorizedAccessException
-{
-    public CredentialNotFoundException(string message) : base(message) { }
 }
 

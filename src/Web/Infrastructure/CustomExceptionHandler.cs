@@ -1,5 +1,4 @@
 ﻿using ASD.Onboard.Application.Common.Exceptions;
-using ASD.Onboard.Application.Common.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +18,7 @@ public class CustomExceptionHandler : IExceptionHandler
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
                 { typeof(EmailNotConfirmedException), HandleEmailNotConfirmedException },
-                { typeof(CredentialNotFoundException), HandleCredentialNotFoundException },
+                { typeof(InvalidUserCredentialException), HandleInvalidUserCredentialException },
             };
     }
 
@@ -105,9 +104,9 @@ public class CustomExceptionHandler : IExceptionHandler
         });
     }
 
-    private async Task HandleCredentialNotFoundException(HttpContext httpContext, Exception ex)
+    private async Task HandleInvalidUserCredentialException(HttpContext httpContext, Exception ex)
     {
-        var exception = (CredentialNotFoundException)ex;
+        var exception = (InvalidUserCredentialException)ex;
 
         httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 

@@ -1,5 +1,4 @@
-﻿using ASD.Onboard.Application.Common.Interfaces;
-using ASD.Onboard.Application.Features.Identity.Commands;
+﻿using ASD.Onboard.Application.Features.Identity.Commands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

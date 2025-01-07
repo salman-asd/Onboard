@@ -51,7 +51,7 @@ internal static class EmailServiceExtension
             .AddSmtpSender(smtpClient);
 
         services.AddSingleton(emailSettings);
-        //services.AddHostedService<EmailHostedService>();
+        services.AddHostedService<EmailHostedService>();
         services.AddHostedService<EmailProcessingService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IEmailOutboxRepository, EmailOutboxRepository>();

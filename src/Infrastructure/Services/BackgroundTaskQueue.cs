@@ -1,48 +1,69 @@
 ﻿using System.Threading.Channels;
 using ASD.Onboard.Application.Common.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace ASD.Onboard.Infrastructure.Services;
 
 public class BackgroundTaskQueue : IBackgroundTaskQueue
 {
     private readonly Channel<Func<CancellationToken, Task>> _queue;
+    private readonly ILogger<BackgroundTaskQueue> _logger;
 
-    public BackgroundTaskQueue()
+    public BackgroundTaskQueue(ILogger<BackgroundTaskQueue> logger)
     {
-        _queue = Channel.CreateUnbounded<Func<CancellationToken, Task>>();
+        // Create bounded channel with options for better back-pressure handling
+        var options = new BoundedChannelOptions(capacity: 100)
+        {
+            FullMode = BoundedChannelFullMode.Wait
+        };
+        _queue = Channel.CreateBounded<Func<CancellationToken, Task>>(options);
+        _logger = logger;
     }
 
-    public void Enqueue(Func<CancellationToken, Task> task)
+    public async Task Enqueue(Func<CancellationToken, Task> task)
     {
         if (task == null) throw new ArgumentNullException(nameof(task));
-        _queue.Writer.TryWrite(task);
+
+        // Use WriteAsync instead of TryWrite to ensure the task is queued
+        await _queue.Writer.WriteAsync(task);
+        _logger.LogInformation("Task successfully enqueued");
     }
 
     public async Task<Func<CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken)
     {
-        return await _queue.Reader.ReadAsync(cancellationToken);
+        var workItem = await _queue.Reader.ReadAsync(cancellationToken);
+        _logger.LogInformation("Task dequeued for processing");
+        return workItem;
     }
 
     public async Task EnqueueWithRetry(Func<CancellationToken, Task> task, int maxRetryCount)
     {
         int attempt = 0;
+        var delay = TimeSpan.FromSeconds(1);
 
         while (attempt < maxRetryCount)
         {
             try
             {
-                Enqueue(task); // Directly enqueue the task
-                break; // Break the loop if the task is enqueued successfully
+                await Enqueue(task);
+                _logger.LogInformation("Task enqueued successfully after {Attempt} attempts", attempt + 1);
+                return;
             }
             catch (Exception ex)
             {
-                if (attempt == maxRetryCount - 1)
+                attempt++;
+                _logger.LogWarning(ex, "Failed to enqueue task. Attempt {Attempt} of {MaxRetries}",
+                    attempt, maxRetryCount);
+
+                if (attempt == maxRetryCount)
                 {
-                    throw new Exception($"Task failed after {maxRetryCount} attempts.", ex);
+                    _logger.LogError(ex, "Task failed to enqueue after {MaxRetries} attempts", maxRetryCount);
+                    throw new Exception($"Failed to enqueue task after {maxRetryCount} attempts.", ex);
                 }
 
-                attempt++;
-                await Task.Delay(1000); // Optional: add delay before retrying
+                // Exponential backoff
+                await Task.Delay(delay);
+                delay *= 2;
             }
         }
     }
