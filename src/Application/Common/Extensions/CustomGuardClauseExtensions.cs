@@ -27,5 +27,13 @@ public static class CustomGuardClauseExtensions
             throw new InvalidUserCredentialException("User not found or invalid credentials.");
         }
     }
+    public static void UserNotFound(this IGuardClause guardClause, object user)
+    {
+        if (user is null)
+        {
+            throw new UserNotFoundException("User not found.");
+        }
+    }
+
 }
 

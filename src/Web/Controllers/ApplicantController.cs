@@ -26,7 +26,7 @@ public class ApplicantController : BaseController
         return Ok();
     }
 
-    [HttpPost]
+    [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> Update(UpdateApplicantCommand command)
     {
@@ -35,19 +35,19 @@ public class ApplicantController : BaseController
     }
 
     #region Educations
-    [HttpGet("{applicantId:Guid}")]
+    [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<ApplicantEducationModel>>> GetEducations(Guid appliacantId)
+    public async Task<ActionResult<List<ApplicantEducationModel>>> GetEducations()
     {
-        var result = await Mediator.Send(new GetApplicantEducationQuery(appliacantId));
+        var result = await Mediator.Send(new GetApplicantEducationQuery());
         return Ok(result);
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> UpsertEducations(UpsertApplicantEducationCommand command)
+    public async Task<ActionResult> UpsertEducations([FromBody] List<ApplicantEducationModel> applicantEducations)
     {
-        await Mediator.Send(command);
+        await Mediator.Send(new UpsertApplicantEducationCommand(applicantEducations));
         return Ok();
     }
     #endregion

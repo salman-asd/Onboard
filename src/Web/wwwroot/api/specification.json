@@ -52,7 +52,7 @@
       }
     },
     "/api/Applicant/Update": {
-      "post": {
+      "put": {
         "tags": [
           "Applicant"
         ],
@@ -76,32 +76,12 @@
         }
       }
     },
-    "/api/Applicant/GetEducations/{applicantId}": {
+    "/api/Applicant/GetEducations": {
       "get": {
         "tags": [
           "Applicant"
         ],
         "operationId": "Applicant_GetEducations",
-        "parameters": [
-          {
-            "name": "appliacantId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "applicantId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 2
-          }
-        ],
         "responses": {
           "200": {
             "description": "",
@@ -126,11 +106,14 @@
         ],
         "operationId": "Applicant_UpsertEducations",
         "requestBody": {
-          "x-name": "command",
+          "x-name": "applicantEducations",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpsertApplicantEducationCommand"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ApplicantEducationModel"
+                }
               }
             }
           },
@@ -683,7 +666,8 @@
           },
           "contactAddress": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -741,22 +725,6 @@
           },
           "isHeighestEducation": {
             "type": "boolean"
-          }
-        }
-      },
-      "UpsertApplicantEducationCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "applicantId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "applicantEducations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApplicantEducationModel"
-            }
           }
         }
       },

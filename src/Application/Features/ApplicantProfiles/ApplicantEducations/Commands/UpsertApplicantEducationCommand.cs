@@ -3,7 +3,6 @@
 namespace ASD.Onboard.Application.Features.ApplicantProfiles.ApplicantEducations.Commands;
 
 public record UpsertApplicantEducationCommand(
-    Guid ApplicantId,
     List<ApplicantEducationModel> ApplicantEducations
     ) : IRequest
 {
@@ -18,19 +17,23 @@ public record UpsertApplicantEducationCommand(
 
 internal sealed class UpsertApplicantEducationCommandHandler(
     IApplicationDbContext context,
+    IApplicantService applicantService,
     IMapper mapper)
     : IRequestHandler<UpsertApplicantEducationCommand>
 {
 
     public async Task Handle(UpsertApplicantEducationCommand request, CancellationToken cancellationToken)
     {
+        var applicantId = await applicantService.GetApplicantIdAsync(cancellationToken);
+        Guard.Against.NullOrEmpty(applicantId);
+
         var existedEducations =  context.ApplicantEducations
-            .Where(x => x.ApplicantId == request.ApplicantId);
+            .Where(x => x.ApplicantId == applicantId);
 
         context.ApplicantEducations.RemoveRange(existedEducations);
 
         var newEducations = mapper.Map<List<ApplicantEducation>>(request.ApplicantEducations);
-        newEducations.ForEach(x => x.ApplicantId = request.ApplicantId);
+        newEducations.ForEach(x => x.ApplicantId = applicantId.Value);
 
         context.ApplicantEducations.AddRange(newEducations);
 
