@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
-
-using ASD.Onboard.Application.Common.Interfaces;
+using ASD.Onboard.Application.Common.Interfaces.Identity;
 
 namespace ASD.Onboard.Web.Services;
 

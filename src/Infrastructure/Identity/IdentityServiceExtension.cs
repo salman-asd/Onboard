@@ -1,4 +1,5 @@
 ﻿using ASD.Onboard.Application.Common.Interfaces;
+using ASD.Onboard.Application.Common.Interfaces.Identity;
 using ASD.Onboard.Domain.Constants;
 using ASD.Onboard.Infrastructure.Data;
 using ASD.Onboard.Infrastructure.EmailCommnunication;

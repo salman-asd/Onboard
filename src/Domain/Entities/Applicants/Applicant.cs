@@ -40,7 +40,9 @@ public class Applicant : BaseAuditableEntity
             FirstName = firstName,
             LastName = lastName,
             PreferredName = firstName,
-            PrimaryEmail = email
+            PrimaryEmail = email,
+            Created = DateTime.Now,
+            CreatedBy = userId
         };
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using ASD.Onboard.Application.Common.Extensions;
 using ASD.Onboard.Application.Common.Interfaces;
+using ASD.Onboard.Application.Common.Interfaces.Identity;
 using ASD.Onboard.Application.Common.Models;
 using ASD.Onboard.Application.Features.Identity.Models;
 using ASD.Onboard.Domain.Entities.Applicants;

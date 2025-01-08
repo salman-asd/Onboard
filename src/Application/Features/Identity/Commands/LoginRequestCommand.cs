@@ -1,4 +1,5 @@
-﻿using ASD.Onboard.Application.Features.Identity.Models;
+﻿using ASD.Onboard.Application.Common.Interfaces.Identity;
+using ASD.Onboard.Application.Features.Identity.Models;
 
 namespace ASD.Onboard.Application.Features.Identity.Commands;
 

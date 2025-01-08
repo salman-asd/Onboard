@@ -6,24 +6,12 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/Applicant/Get/{id}": {
+    "/api/Applicant/Get": {
       "get": {
         "tags": [
           "Applicant"
         ],
         "operationId": "Applicant_Get",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
         "responses": {
           "200": {
             "description": "",
@@ -480,7 +468,8 @@
           },
           "contactAddress": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           }
         }
       },

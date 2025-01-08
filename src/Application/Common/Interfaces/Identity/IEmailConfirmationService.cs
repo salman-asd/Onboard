@@ -1,4 +1,4 @@
-﻿namespace ASD.Onboard.Application.Common.Interfaces;
+﻿namespace ASD.Onboard.Application.Common.Interfaces.Identity;
 
 public interface IEmailConfirmationService
 {

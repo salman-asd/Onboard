@@ -1,5 +1,4 @@
 ﻿using Azure.Identity;
-using ASD.Onboard.Application.Common.Interfaces;
 using ASD.Onboard.Infrastructure.Data;
 using ASD.Onboard.Web.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using ZymLabs.NSwag.FluentValidation;
+using ASD.Onboard.Application.Common.Interfaces.Identity;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

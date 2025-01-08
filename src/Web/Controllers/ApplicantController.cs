@@ -10,11 +10,11 @@ namespace ASD.Onboard.Web.Controllers;
 
 public class ApplicantController : BaseController
 {
-    [HttpGet("{id:Guid}")]
+    [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<ApplicantModel>> Get(Guid id)
+    public async Task<ActionResult<ApplicantModel>> Get()
     {
-        var result = await Mediator.Send(new GetApplicantQuery(id));
+        var result = await Mediator.Send(new GetApplicantQuery());
         return Ok(result);
     }
 

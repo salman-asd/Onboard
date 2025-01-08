@@ -1,5 +1,5 @@
 ﻿using System.Data.Common;
-using ASD.Onboard.Application.Common.Interfaces;
+using ASD.Onboard.Application.Common.Interfaces.Identity;
 using ASD.Onboard.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;

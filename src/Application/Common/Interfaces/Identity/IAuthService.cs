@@ -1,7 +1,7 @@
 ﻿using ASD.Onboard.Application.Common.Models;
 using ASD.Onboard.Application.Features.Identity.Models;
 
-namespace ASD.Onboard.Application.Common.Interfaces;
+namespace ASD.Onboard.Application.Common.Interfaces.Identity;
 
 public interface IAuthService
 {

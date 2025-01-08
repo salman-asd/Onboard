@@ -23,23 +23,19 @@ public class ApplicantConfiguration : IEntityTypeConfiguration<Applicant>
             .HasMaxLength(100);
 
         builder.Property(a => a.DOB)
-            .IsRequired(false)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.Property(a => a.BloodGroupId)
-            .IsRequired(false)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.Property(a => a.ReligionId)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.Property(a => a.MaritalStatusId)
-            .IsRequired(false)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.Property(a => a.GenderId)
-            .IsRequired(false)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.Property(a => a.PrimaryMobileNo)
             .IsRequired(false)

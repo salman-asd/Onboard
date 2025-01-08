@@ -1,4 +1,4 @@
-﻿using ASD.Onboard.Application.Common.Interfaces;
+﻿using ASD.Onboard.Application.Common.Interfaces.Identity;
 using ASD.Onboard.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;

@@ -4,19 +4,16 @@ using ASD.Onboard.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ASD.Onboard.Infrastructure.Data.Migrations
+namespace ASD.Onboard.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250106064142_AddOutboxEmailProcess")]
-    partial class AddOutboxEmailProcess
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,10 +29,9 @@ namespace ASD.Onboard.Infrastructure.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("BloodGroupId")
-                        .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int>("ContactAddress")
+                    b.Property<int?>("ContactAddress")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(1);
@@ -47,7 +43,6 @@ namespace ASD.Onboard.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateOnly?>("DOB")
-                        .IsRequired()
                         .HasColumnType("date");
 
                     b.Property<string>("FirstName")
@@ -55,7 +50,6 @@ namespace ASD.Onboard.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("GenderId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<long?>("IdentificationNo")
@@ -75,7 +69,6 @@ namespace ASD.Onboard.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("MaritalStatusId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Nationality")
@@ -115,7 +108,6 @@ namespace ASD.Onboard.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(15)");
 
                     b.Property<Guid?>("ReligionId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("SecondaryEmail")
@@ -126,8 +118,9 @@ namespace ASD.Onboard.Infrastructure.Data.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -206,16 +199,12 @@ namespace ASD.Onboard.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Body")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Error")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HtmlBody")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsProcessed")
@@ -320,6 +309,32 @@ namespace ASD.Onboard.Infrastructure.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("ASD.Onboard.Infrastructure.Identity.EmailConfirmationToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiryTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "IsUsed", "ExpiryTime");
+
+                    b.ToTable("EmailConfirmationTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -464,6 +479,17 @@ namespace ASD.Onboard.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Applicant");
+                });
+
+            modelBuilder.Entity("ASD.Onboard.Infrastructure.Identity.EmailConfirmationToken", b =>
+                {
+                    b.HasOne("ASD.Onboard.Infrastructure.Identity.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

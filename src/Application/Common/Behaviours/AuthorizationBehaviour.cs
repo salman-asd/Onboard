@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using ASD.Onboard.Application.Common.Exceptions;
-using ASD.Onboard.Application.Common.Interfaces;
+using ASD.Onboard.Application.Common.Interfaces.Identity;
 using ASD.Onboard.Application.Common.Security;
 
 namespace ASD.Onboard.Application.Common.Behaviours;

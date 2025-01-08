@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using ASD.Onboard.Application.Common.Interfaces;
+using ASD.Onboard.Application.Common.Interfaces.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace ASD.Onboard.Application.Common.Behaviours;

@@ -1,4 +1,6 @@
-﻿namespace ASD.Onboard.Application.Features.Identity.Commands;
+﻿using ASD.Onboard.Application.Common.Interfaces.Identity;
+
+namespace ASD.Onboard.Application.Features.Identity.Commands;
 
 public record ConfirmEmailCommand(
     string Email, 

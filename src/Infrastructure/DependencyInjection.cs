@@ -1,4 +1,5 @@
 ﻿using ASD.Onboard.Application.Common.Interfaces;
+using ASD.Onboard.Infrastructure.Cap;
 using ASD.Onboard.Infrastructure.Data;
 using ASD.Onboard.Infrastructure.Data.Interceptors;
 using ASD.Onboard.Infrastructure.EmailCommnunication;
@@ -42,7 +43,9 @@ public static class DependencyInjection
 
         services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
 
+        services.AddMessageBus(configuration);
 
+        services.AddScoped<IApplicantService, ApplicantService>();
         return services;
     }
 }

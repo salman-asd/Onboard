@@ -1,5 +1,8 @@
-﻿namespace ASD.Onboard.Application.Features.ApplicantProfiles.Applicants.Commands;
+﻿using ASD.Onboard.Application.Common.Security;
 
+namespace ASD.Onboard.Application.Features.ApplicantProfiles.Applicants.Commands;
+
+[Authorize]
 public record CreateApplicantCommand(
     string? FirstName,
     string? LastName,

@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetCore.CAP" />
+    <PackageReference Include="DotNetCore.CAP.Dashboard" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" />
+    <PackageReference Include="DotNetCore.CAP.SqlServer" />
     <PackageReference Include="FluentEmail.Core" />
     <PackageReference Include="FluentEmail.Razor" />
     <PackageReference Include="FluentEmail.Smtp" />

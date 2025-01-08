@@ -1,4 +1,5 @@
 ﻿using ASD.Onboard.Application.Common.Interfaces;
+using ASD.Onboard.Application.Common.Interfaces.Identity;
 using ASD.Onboard.Application.Common.Models;
 using ASD.Onboard.Domain.Entities;
 using ASD.Onboard.Domain.Entities.Applicants;

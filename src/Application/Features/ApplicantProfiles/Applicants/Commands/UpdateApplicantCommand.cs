@@ -1,5 +1,8 @@
-﻿namespace ASD.Onboard.Application.Features.ApplicantProfiles.Applicants.Commands;
+﻿using ASD.Onboard.Application.Common.Security;
 
+namespace ASD.Onboard.Application.Features.ApplicantProfiles.Applicants.Commands;
+
+[Authorize]
 public record UpdateApplicantCommand(
     Guid Id,
     string? FirstName,
@@ -23,7 +26,7 @@ public record UpdateApplicantCommand(
     string? PresAddress,
     Guid? PresDistrictId,
     int? PresZipCode,
-    int ContactAddress) : IRequest
+    int? ContactAddress) : IRequest
 {
     private class Mapping : Profile
     {

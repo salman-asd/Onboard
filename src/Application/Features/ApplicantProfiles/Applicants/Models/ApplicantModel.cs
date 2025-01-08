@@ -24,7 +24,7 @@ public record ApplicantModel
     public string? PresAddress { get; set; }
     public Guid? PresDistrictId { get; set; }
     public int? PresZipCode { get; set; }
-    public int ContactAddress { get; set; }
+    public int? ContactAddress { get; set; }
 
     private class Mapping : Profile
     {
