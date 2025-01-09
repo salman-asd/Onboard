@@ -10,6 +10,9 @@ public class ApplicantEducationConfiguration : IEntityTypeConfiguration<Applican
 
         builder.HasKey(ae => ae.Id);
 
+        builder.Property(x => x.Id)
+                .ValueGeneratedOnAdd();
+
         builder.Property(ae => ae.EducationLevel)
             .IsRequired(false);
 

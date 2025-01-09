@@ -4,6 +4,7 @@ using ASD.Onboard.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASD.Onboard.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250109101936_JobPostAdded2")]
+    partial class JobPostAdded2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -247,9 +250,6 @@ namespace ASD.Onboard.Infrastructure.Migrations
                     b.Property<Guid>("ApplicantId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AppliedRef")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
@@ -265,7 +265,7 @@ namespace ASD.Onboard.Infrastructure.Migrations
                     b.Property<Guid>("PositionPostId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("StatusId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
@@ -335,7 +335,7 @@ namespace ASD.Onboard.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal?>("Experience")
-                        .HasColumnType("decimal(4, 2)");
+                        .HasColumnType("decimal(2, 2)");
 
                     b.Property<string>("JobLocation")
                         .HasColumnType("nvarchar(max)");
@@ -390,7 +390,7 @@ namespace ASD.Onboard.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PositionPosts", "dbo");
+                    b.ToTable("PositionPosts", "onboarding");
                 });
 
             modelBuilder.Entity("ASD.Onboard.Infrastructure.Identity.AppUser", b =>

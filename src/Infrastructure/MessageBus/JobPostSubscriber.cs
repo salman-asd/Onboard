@@ -1,4 +1,4 @@
-﻿using ASD.Onboard.Application.Features.JobPosts;
+﻿using ASD.Onboard.Application.Features.PositionPosts;
 using DotNetCore.CAP;
 using MediatR;
 using Microsoft.Extensions.Logging;

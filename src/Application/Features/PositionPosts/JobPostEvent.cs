@@ -1,4 +1,4 @@
-﻿namespace ASD.Onboard.Application.Features.JobPosts;
+﻿namespace ASD.Onboard.Application.Features.PositionPosts;
 
 public class JobPostEvent
 {

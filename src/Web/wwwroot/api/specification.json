@@ -342,6 +342,83 @@
           }
         }
       }
+    },
+    "/api/PositionPost/GetJobCards": {
+      "get": {
+        "tags": [
+          "PositionPost"
+        ],
+        "operationId": "PositionPost_GetJobCards",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobCardModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PositionPost/GetJobDetails/{positionPostId}": {
+      "get": {
+        "tags": [
+          "PositionPost"
+        ],
+        "operationId": "PositionPost_GetJobDetails",
+        "parameters": [
+          {
+            "name": "positionPostId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobCardModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PositionPost/ApplyJob": {
+      "post": {
+        "tags": [
+          "PositionPost"
+        ],
+        "operationId": "PositionPost_ApplyJob",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateJobApplicationCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
     }
   },
   "components": {
@@ -823,6 +900,58 @@
           },
           "newPassword": {
             "type": "string"
+          }
+        }
+      },
+      "JobCardModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "postitionPostId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "jobPostTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference": {
+            "type": "string",
+            "nullable": true
+          },
+          "vacancy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "experience": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "statusId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isApplied": {
+            "type": "boolean"
+          },
+          "appliedRef": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CreateJobApplicationCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "positionPostId": {
+            "type": "string",
+            "format": "guid"
           }
         }
       }

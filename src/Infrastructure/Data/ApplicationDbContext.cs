@@ -2,11 +2,11 @@
 using ASD.Onboard.Application.Common.Interfaces;
 using ASD.Onboard.Domain.Entities;
 using ASD.Onboard.Domain.Entities.Applicants;
+using ASD.Onboard.Domain.Entities.Jobs;
 using ASD.Onboard.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ASD.Onboard.Infrastructure.Data;
 
@@ -18,6 +18,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Applicant> Applicants => Set<Applicant>();
     public DbSet<ApplicantEducation> ApplicantEducations => Set<ApplicantEducation>();
     #endregion
+
+    #region Position Post
+    public DbSet<PositionPost> PositionPosts => Set<PositionPost>();
+    public DbSet<JobApplication> JobApplications => Set<JobApplication>();
+    #endregion
+
     public DbSet<EmailOutboxMessage> EmailOutboxes => Set<EmailOutboxMessage>();
     public DbSet<EmailConfirmationToken> EmailConfirmationTokens => Set<EmailConfirmationToken>();
 

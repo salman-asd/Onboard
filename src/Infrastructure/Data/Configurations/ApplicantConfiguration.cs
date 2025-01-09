@@ -10,6 +10,9 @@ public class ApplicantConfiguration : IEntityTypeConfiguration<Applicant>
 
         builder.HasKey(a => a.Id);
 
+        builder.Property(x => x.Id)
+            .ValueGeneratedOnAdd();
+
         builder.Property(a => a.FirstName)
             .IsRequired(false)
             .HasMaxLength(100);
