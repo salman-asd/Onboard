@@ -1,7 +1,9 @@
-﻿using ASD.Onboard.Application.Features.PositionPosts.Models;
+﻿using ASD.Onboard.Application.Common.Security;
+using ASD.Onboard.Application.Features.PositionPosts.Models;
 
 namespace ASD.Onboard.Application.Features.PositionPosts.Queries;
 
+[Authorize]
 public record GetPositionPostDetailQuery(
     Guid PositionPostId) : IRequest<PositionPostModel>;
 

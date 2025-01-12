@@ -19,6 +19,7 @@ public class CustomExceptionHandler : IExceptionHandler
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
                 { typeof(EmailNotConfirmedException), HandleEmailNotConfirmedException },
                 { typeof(InvalidUserCredentialException), HandleInvalidUserCredentialException },
+                { typeof(AlreadyAppliedException), HandleAlreadyAppliedException },
             };
     }
 
@@ -118,5 +119,18 @@ public class CustomExceptionHandler : IExceptionHandler
             Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
         });
     }
+    private async Task HandleAlreadyAppliedException(HttpContext httpContext, Exception ex)
+    {
+        var exception = (AlreadyAppliedException)ex;
 
+        httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+        await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
+        {
+            Status = StatusCodes.Status400BadRequest,
+            Title = "Invalid Operation",
+            Detail = exception.Message,
+            Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
+        });
+    }
 }

@@ -20,7 +20,8 @@ internal sealed class TokenProvider(IOptions<JwtSettings> jwtSettings): ITokenPr
                 new(JwtRegisteredClaimNames.Sub, user.Id),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new(ClaimTypes.Email, user.Email),
-                new(ClaimTypes.Name, user.UserName.Split('@').First().ToLower())
+                new ("firstName", user.FirstName), // First Name
+                new ("lastName", user.LastName) // Last Name
             };
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
